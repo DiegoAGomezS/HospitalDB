@@ -116,3 +116,63 @@ CREATE TABLE Agendas.Citas (
     FOREIGN KEY (HabitacionID) REFERENCES Agendas.Habitaciones(HabitacionID)
 );
 
+-- 5. Alteraciones en tablas
+
+/* Modificación de estructuras solicitadas (ALTER):
+
+Agregar columna teléfono a Pacientes.
+Agregar columna dirección a Pacientes.
+Agregar columna género.
+Agregar columna tipo_sangre.
+Agregar columna fecha_nacimiento.
+Modificar tamaño del campo nombre.
+Modificar tamaño del campo dirección.
+Agregar columna experiencia a Médicos.
+Agregar columna turno.
+Agregar columna observaciones.
+Eliminar columna observaciones.
+Agregar columna estado a Citas.
+Agregar columna costo_consulta.
+Modificar tipo de dato del costo.
+Agregar columna disponibilidad a Habitaciones.
+
+*/
+
+-- Alteraciones en la tabla Pacientes (Telefono, Dirección, Género, Tipo de Sangre, Fecha de Nacimiento)
+ALTER TABLE Visitas.Pacientes
+ADD Telefono NVARCHAR(20),
+    Direccion NVARCHAR(255),
+    Genero NVARCHAR(10),
+    TipoSangre NVARCHAR(5),
+    FechaNacimiento DATE;
+
+-- Modificación del tamaño del campo Nombre y Dirección en Pacientes:
+Alter TABLE Visitas.Pacientes
+ALTER COLUMN Nombre NVARCHAR(150) NOT NULL;
+
+Alter TABLE Visitas.Pacientes
+ALTER COLUMN Direccion NVARCHAR(500);
+
+-- Alteraciones en la tabla Médicos (Experiencia, Turno, Observaciones)
+ALTER TABLE Personal.Medicos
+ADD Experiencia INT,
+    Turno NVARCHAR(20),
+    Observaciones NVARCHAR(255);
+
+-- Eliminación de la columna Observaciones en Médicos
+ALTER TABLE Personal.Medicos
+DROP COLUMN Observaciones;
+
+-- Alteraciones en la tabla Citas (Estado, Costo Consulta)
+ALTER TABLE Agendas.Citas
+ADD Estado NVARCHAR(20),
+    CostoConsulta DECIMAL(18, 2);
+
+-- Modificación del tipo de dato del costo de consulta a FLOAT
+ALTER TABLE Agendas.Citas
+ALTER COLUMN CostoConsulta FLOAT;
+
+-- Alteraciones en la tabla Habitaciones (Disponibilidad)
+ALTER TABLE Agendas.Habitaciones
+ADD Disponibilidad BIT;
+
