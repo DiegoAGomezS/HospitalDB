@@ -558,3 +558,49 @@ WHERE Nombre LIKE 'Prueba%';
 
 DELETE FROM Personal.Medicos
 WHERE Nombre LIKE 'Prueba%';
+
+-- 9. Consultas de selección (SELECT):
+
+/* Consultas solicitadas:
+
+Mostrar todos los pacientes.
+Mostrar todos los médicos.
+Mostrar todas las especialidades.
+Mostrar todas las citas.
+Mostrar pacientes ordenados por apellido.
+Mostrar médicos ordenados por salario.
+Mostrar citas del día actual.
+Mostrar habitaciones disponibles.
+Mostrar cantidad de pacientes registrados.
+Mostrar cantidad de citas por médico.
+
+*/
+
+-- Mostrar todos los pacientes
+SELECT * FROM Visitas.Pacientes;
+
+-- Mostrar todos los médicos
+SELECT * FROM Personal.Medicos;
+
+-- Mostrar todas las especialidades
+SELECT * FROM Personal.Especialidades;
+
+-- Mostrar todas las citas
+SELECT * FROM Agendas.Citas;
+
+-- Mostrar pacientes ordenados por apellido (suponiendo que el apellido es la última palabra en el campo Nombre)
+SELECT * FROM Visitas.Pacientes
+ORDER BY RIGHT(Nombre, CHARINDEX(' ', REVERSE(Nombre)) - 1);
+
+-- Mostrar médicos ordenados por salario
+SELECT * FROM Personal.Medicos
+ORDER BY Salario DESC;
+
+-- Mostrar citas del día actual
+SELECT * FROM Agendas.Citas
+WHERE CAST(FechaCita AS DATE) = CAST(GETDATE() AS DATE);
+
+-- Mostrar habitaciones disponibles
+SELECT * FROM Agendas.Habitaciones
+WHERE Disponibilidad = 0;
+
