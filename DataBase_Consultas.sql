@@ -66,8 +66,10 @@ CREATE TABLE Personal.Medicos (
     MedicoID INT PRIMARY KEY IDENTITY(1,1),
     Nombre NVARCHAR(100) NOT NULL,
     EspecialidadID INT,
-    Correo NVARCHAR(255) UNIQUE,
-    Salario DECIMAL(18, 2) CHECK (Salario > 0),
+    CONSTRAINT UQ_Medicos_Correo UNIQUE (Correo),
+    Correo NVARCHAR(255),
+    CONSTRAINT CK_Medicos_Salario CHECK (Salario > 0),
+    Salario DECIMAL(18, 2),
     FechaRegistro DATETIME DEFAULT GETDATE(),
     ColumnaEliminable NVARCHAR(255),
     FOREIGN KEY (EspecialidadID) REFERENCES Personal.Especialidades(EspecialidadID)
@@ -113,7 +115,7 @@ CREATE TABLE Agendas.Citas (
     HabitacionID INT,
     FechaCita DATETIME,
     FOREIGN KEY (PacienteID) REFERENCES Visitas.Pacientes(PacienteID),
-    FOREIGN KEY (MedicoID) REFERENCES Personal.Medicos(MedicoID),
+    CONSTRAINT FK_Citas_Medicos FOREIGN KEY (MedicoID) REFERENCES Personal.Medicos(MedicoID),
     FOREIGN KEY (HabitacionID) REFERENCES Agendas.Habitaciones(HabitacionID)
 );
 
@@ -254,9 +256,7 @@ USE master;
 GO
 
 Create database HospitalDB_Pruebas;
-
-Use Master;
-Go
+GO
 
 IF EXISTS (SELECT name FROM sys.databases WHERE name = N'HospitalDB_Pruebas')
 BEGIN
@@ -322,6 +322,20 @@ INSERT INTO Personal.Medicos (Nombre, EspecialidadID, Correo, Salario, Experienc
 ('Patricia Delgado', 4, 'PD@gmail.com', 4400.00, 4, 'Matutino'),
 ('Fernando Ríos', 5, 'FR@gmail.com', 7500.00, 22, 'Nocturno');
 
+-- Insertar 10 habitaciones ocupadas y disponibles
+-- Nota: 0 para disponible y 1 para ocupado
+INSERT INTO Agendas.Habitaciones (Numero, Tipo, Disponibilidad) VALUES
+('101', 'Individual', 0),
+('102', 'Doble', 1),
+('103', 'Suite', 0),
+('104', 'Individual', 1),
+('105', 'Doble', 0),
+('106', 'Suite', 1),
+('107', 'Individual', 0),
+('108', 'Doble', 1),
+('109', 'Suite', 0),
+('110', 'Individual', 1);
+
 -- Insertar 20 pacientes con todos los campos (Nombre, Correo, Edad, Teléfono, Dirección, Género, Tipo de Sangre, Fecha de Nacimiento)
 INSERT INTO Visitas.Pacientes (Nombre, Correo, Edad, Telefono, Direccion, Genero, TipoSangre, FechaNacimiento) VALUES
 ('Carlos Gómez', 'CG@gmail.com', 30, '555-1234', 'Calle 123', 'Masculino', 'O+', '1994-01-15'),
@@ -343,7 +357,7 @@ INSERT INTO Visitas.Pacientes (Nombre, Correo, Edad, Telefono, Direccion, Genero
 ('Beatriz Ortiz', 'BO@gmail.com', 48, '555-0187', 'Avenida 147', 'Femenino', 'O-', '1976-05-14'),
 ('Alejandro Silva', 'AS@gmail.com', 33, '555-4521', 'Boulevard 369', 'Masculino', 'A-', '1991-09-02'),
 ('Patricia Delgado', 'PD@gmail.com', 24, '555-8963', 'Calle 258', 'Femenino', 'B+', '2000-12-08'),
-('Fernando Ríos', 'FR@gmail.com', 55, '555-1274', 'Avenida link', 'Masculino', 'O+', '1969-07-21');
+('Fernando Ríos', 'FR@gmail.com', 55, '555-1274', 'Avenida Central', 'Masculino', 'O+', '1969-07-21');
 
 -- Insertar 15 citas con fecha actual y futuras
 Insert into Agendas.Citas (PacienteID, MedicoID, HabitacionID, FechaCita, Estado, CostoConsulta) VALUES
@@ -363,27 +377,13 @@ Insert into Agendas.Citas (PacienteID, MedicoID, HabitacionID, FechaCita, Estado
 (14 ,4 ,4 ,DATEADD(DAY,-63 ,GETDATE()) , 'Completada' ,300.00),
 (15 ,5 ,5 ,DATEADD(DAY,-70 ,GETDATE()) , 'Completada' ,350.00);
 
--- Insertar 10 habitaciones ocupadas y disponibles
--- Nota: 0 para disponible y 1 para ocupado
-INSERT INTO Agendas.Habitaciones (Numero, Tipo, Disponibilidad) VALUES
-('101', 'Individual', 0),
-('102', 'Doble', 1),
-('103', 'Suite', 0),
-('104', 'Individual', 1),
-('105', 'Doble', 0),
-('106', 'Suite', 1),
-('107', 'Individual', 0),
-('108', 'Doble', 1),
-('109', 'Suite', 0),
-('110', 'Individual', 1);
-
 -- Insertar 10 tratamientos activos y finalizados
 INSERT INTO Visitas.Tratamientos (PacienteID, Descripcion, FechaInicio, FechaFin) VALUES
 (1, 'Tratamiento para hipertensión', DATEADD(DAY, -30, GETDATE()), NULL),
 (2, 'Tratamiento para diabetes', DATEADD(DAY, -60, GETDATE()), DATEADD(DAY, -15, GETDATE())),
 (3, 'Tratamiento para asma', DATEADD(DAY, -45, GETDATE()), NULL),
 (4, 'Tratamiento para alergias', DATEADD(DAY, -20, GETDATE()), DATEADD(DAY, -5, GETDATE())),
-(5, 'Tratamiento para artritis', DATEADD(DAY, -90, GETDATE()), NULL),
+(5, 'Tratamiento para arthritis', DATEADD(DAY, -90, GETDATE()), NULL),
 (6, 'Tratamiento para depresión', DATEADD(DAY, -120, GETDATE()), DATEADD(DAY, -30, GETDATE())),
 (7, 'Tratamiento para migrañas', DATEADD(DAY, -15, GETDATE()), NULL),
 (8, 'Tratamiento para insomnio', DATEADD(DAY, -10, GETDATE()), DATEADD(DAY, 10, GETDATE())),
@@ -442,7 +442,7 @@ WHERE PacienteID = 1;
 
 -- Actualizar salario y turno de un médico
 UPDATE Personal.Medicos
-SET Salario = 60000, Turno = 'Tarde'
+SET Salario = 60000, Turno = 'Vespertino'
 WHERE MedicoID = 1;
 
 -- Cambiar estado y costo de una cita
@@ -512,6 +512,11 @@ Eliminar registros de prueba.
 
 */
 
+-- Para evitar conflictos de llaves foráneas en cascada durante la purga de datos, desactivamos temporalmente los checks de FK.
+ALTER TABLE Agendas.Citas NOCHECK CONSTRAINT ALL;
+ALTER TABLE Visitas.Tratamientos NOCHECK CONSTRAINT ALL;
+ALTER TABLE Visitas.Medicamentos NOCHECK CONSTRAINT ALL;
+
 -- Eliminar un paciente específico
 DELETE FROM Visitas.Pacientes
 WHERE PacienteID = 1;
@@ -538,7 +543,7 @@ WHERE Estado = 'Cancelada';
 
 -- Eliminar pacientes sin citas
 DELETE FROM Visitas.Pacientes
-WHERE PacienteID NOT IN (SELECT DISTINCT PacienteID FROM Agendas.Citas);
+WHERE PacienteID NOT IN (SELECT DISTINCT PacienteID FROM Agendas.Citas WHERE PacienteID IS NOT NULL);
 
 -- Eliminar habitaciones vacías
 DELETE FROM Agendas.Habitaciones
@@ -558,6 +563,11 @@ WHERE Nombre LIKE 'Prueba%';
 
 DELETE FROM Personal.Medicos
 WHERE Nombre LIKE 'Prueba%';
+
+-- Reactivamos las restricciones de llaves foráneas para mantener la integridad en adelante.
+ALTER TABLE Agendas.Citas CHECK CONSTRAINT ALL;
+ALTER TABLE Visitas.Tratamientos CHECK CONSTRAINT ALL;
+ALTER TABLE Visitas.Medicamentos CHECK CONSTRAINT ALL;
 
 -- 9. Consultas de selección (SELECT):
 
