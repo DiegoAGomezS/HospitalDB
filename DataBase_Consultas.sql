@@ -494,3 +494,67 @@ WHERE MedicoID = 1;
 UPDATE Visitas.Pacientes
 SET TipoSangre = 'A+'
 WHERE PacienteID = 1;
+
+-- 9. Eliminación de datos (DELETE):
+
+/* Eliminaciones solicitadas: 
+
+Eliminar un paciente específico.
+Eliminar una cita.
+Eliminar un medicamento.
+Eliminar una habitación.
+Eliminar un tratamiento.
+Eliminar citas canceladas.
+Eliminar pacientes sin citas.
+Eliminar habitaciones vacías.
+Eliminar medicamentos vencidos.
+Eliminar registros de prueba.
+
+*/
+
+-- Eliminar un paciente específico
+DELETE FROM Visitas.Pacientes
+WHERE PacienteID = 1;
+
+-- Eliminar una cita
+DELETE FROM Agendas.Citas
+WHERE CitaID = 1;
+
+-- Eliminar un medicamento
+DELETE FROM Visitas.Medicamentos
+WHERE MedicamentoID = 1;
+
+-- Eliminar una habitación
+DELETE FROM Agendas.Habitaciones
+WHERE HabitacionID = 2;
+
+-- Eliminar un tratamiento
+DELETE FROM Visitas.Tratamientos
+WHERE TratamientoID = 1;
+
+-- Eliminar citas canceladas
+DELETE FROM Agendas.Citas
+WHERE Estado = 'Cancelada';
+
+-- Eliminar pacientes sin citas
+DELETE FROM Visitas.Pacientes
+WHERE PacienteID NOT IN (SELECT DISTINCT PacienteID FROM Agendas.Citas);
+
+-- Eliminar habitaciones vacías
+DELETE FROM Agendas.Habitaciones
+WHERE Disponibilidad = 0;
+
+-- Eliminar medicamentos vencidos (suponiendo que un medicamento se considera vencido si su tratamiento ha finalizado hace más de 30 días)
+DELETE FROM Visitas.Medicamentos
+WHERE TratamientoID IN (
+    SELECT TratamientoID
+    FROM Visitas.Tratamientos
+    WHERE FechaFin IS NOT NULL AND DATEDIFF(DAY, FechaFin, GETDATE()) > 30
+);
+
+-- Eliminar registros de prueba (suponiendo que los registros de prueba tienen un nombre específico o un patrón en el correo)
+DELETE FROM Visitas.Pacientes
+WHERE Nombre LIKE 'Prueba%';
+
+DELETE FROM Personal.Medicos
+WHERE Nombre LIKE 'Prueba%';
