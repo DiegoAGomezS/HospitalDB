@@ -267,4 +267,136 @@ GO
 use HospitalDB;
 GO
 
+-- 7. Insertación de datos de ejemplo.
 
+/* Insertaciónes solicitadas:
+
+Insertar 5 especialidades médicas.
+Insertar 10 médicos.
+Insertar 20 pacientes.
+Insertar 15 citas.
+Insertar 10 habitaciones.
+Insertar 10 tratamientos.
+Insertar 20 medicamentos.
+Insertar pacientes con todos los campos.
+Insertar médicos especialistas.
+Insertar citas con fecha actual.
+Insertar citas futuras.
+Insertar habitaciones ocupadas.
+Insertar habitaciones disponibles.
+Insertar tratamientos activos.
+Insertar tratamientos finalizados.
+
+*/
+
+-- Insertar 5 especialidades médicas
+INSERT INTO Personal.Especialidades (Nombre) VALUES
+('Cardiología'),
+('Neurología'),
+('Pediatría'),
+('Dermatología'),
+('Gastroenterología');
+
+-- Insertar 10 médicos y especialistas
+INSERT INTO Personal.Medicos (Nombre, EspecialidadID, Correo, Salario, Turno) VALUES
+('Dr. Juan Pérez', 1, 'JP@Hospital.com', 50000, 'Mañana'),
+('Dra. Ana Gómez', 2, 'AG@Hospital.com', 55000, 'Tarde'),
+('Dr. Carlos Ruiz', 3, 'CR@Hospital.com', 48000, 'Noche'),
+('Dra. Laura Martínez', 4, 'LM@Hospital.com', 53000, 'Mañana'),
+('Dr. Pedro Sánchez', 5, 'PD@Hospital.com', 52000, 'Tarde'),
+('Dra. María López', 1, 'ML@Hospital.com', 51000, 'Noche'),
+('Dr. Luis Fernández', 2, 'LF@Hospital.com', 54000, 'Mañana'),
+('Dra. Sofía Ramírez', 3, 'SR@Hospital.com', 49000, 'Tarde'),
+('Dr. Andrés Torres', 4, 'AT@Hospital.com', 53000, 'Noche'),
+('Dra. Ruiz Sandoval', 5, 'RS@Hospital.com', 50000, 'Mañana');
+
+-- Insertar 20 pacientes con todos los campos (Nombre, Correo, Edad, Teléfono, Dirección, Género, Tipo de Sangre, Fecha de Nacimiento)
+INSERT INTO Visitas.Pacientes (Nombre, Correo, Edad, Telefono, Direccion, Genero, TipoSangre, FechaNacimiento) VALUES
+('Carlos Gómez', 'CG@gmail.com', 30, '555-1234', 'Calle 123', 'Masculino', 'O+', '1994-01-15'),
+('María Rodríguez', 'MR@gmail.com', 25, '555-5678', 'Avenida 456', 'Femenino', 'A-', '1999-05-20'),
+('Luis Fernández', 'LF@gmail.com', 40, '555-9012', 'Boulevard 789', 'Masculino', 'B+', '1984-03-10'),
+('Ana Martínez', 'AM@gmail.com', 35, '555-3456', 'Calle 321', 'Femenino', 'AB-', '1989-07-25'),
+('Pedro Sánchez', 'PS@gmail.com', 28, '555-7890', 'Avenida 654', 'Masculino', 'O-', '1996-11-05'),
+('Sofía Ramírez', 'SR@gmail.com', 22, '555-2345', 'Boulevard 987', 'Femenino', 'A+', '2002-02-18'),
+('Andrés Torres', 'AT@gmail.com', 45, '555-6789', 'Calle 456', 'Masculino', 'B-', '1979-09-30'),
+('Laura López', 'LL@gmail.com', 32, '555-0123', 'Avenida 321', 'Femenino', 'AB+', '1992-12-12'),
+('Diego Ramírez', 'DR@gmail.com', 27, '555-4567', 'Boulevard 654', 'Masculino', 'O+', '1997-04-22'),
+('Marta Fernández', 'MF@gmail.com', 38, '555-8901', 'Calle 789', 'Femenino', 'A-', '1984-08-14'),
+('Jorge Sánchez', 'JS@gmail.com', 50, '555-2345', 'Avenida 987', 'Masculino', 'B+', '1972-06-05'),
+('Lucía Martínez', 'LM@gmail.com', 29, '555-6789', 'Boulevard 321', 'Femenino', 'AB-', '1993-10-30'),
+('Elena Castro', 'EC@gmail.com', 31, '555-3450', 'Calle 159', 'Femenino', 'O+', '1993-04-05'),
+('Ricardo Herrera', 'RH@gmail.com', 42, '555-7812', 'Avenida 753', 'Masculino', 'A+', '1982-11-12'),
+('Claudia Vargas', 'CV@gmail.com', 26, '555-2398', 'Boulevard 852', 'Femenino', 'B-', '1998-08-24'),
+('Gabriel Mendoza', 'GM@gmail.com', 36, '555-6745', 'Calle 963', 'Masculino', 'AB+', '1988-01-19'),
+('Beatriz Ortiz', 'BO@gmail.com', 48, '555-0187', 'Avenida 147', 'Femenino', 'O-', '1976-05-14'),
+('Alejandro Silva', 'AS@gmail.com', 33, '555-4521', 'Boulevard 369', 'Masculino', 'A-', '1991-09-02'),
+('Patricia Delgado', 'PD@gmail.com', 24, '555-8963', 'Calle 258', 'Femenino', 'B+', '2000-12-08'),
+('Fernando Ríos', 'FR@gmail.com', 55, '555-1274', 'Avenida link', 'Masculino', 'O+', '1969-07-21');
+
+-- Insertar 15 citas con fecha actual y futuras
+Insert into Agendas.Citas (PacienteID, MedicoID, HabitacionID, FechaCita, Estado, CostoConsulta) VALUES
+(1, 1, 1, GETDATE(), 'Programada', 150.00),
+(2, 2, 2, DATEADD(DAY, 7, GETDATE()), 'Programada', 200.00),
+(3, 3, 3, DATEADD(DAY, 14, GETDATE()), 'Programada', 250.00),
+(4, 4, 4, DATEADD(DAY, 21, GETDATE()), 'Programada', 300.00),
+(5, 5, 5, DATEADD(DAY, 28, GETDATE()), 'Programada', 350.00),
+(6, 6, 6, DATEADD(DAY, -7, GETDATE()), 'Completada', 150.00),
+(7, 7, 7, DATEADD(DAY, -14, GETDATE()), 'Completada', 200.00),
+(8, 8, 8, DATEADD(DAY, -21, GETDATE()), 'Completada', 250.00),
+(9, 9, 9, DATEADD(DAY, -28, GETDATE()), 'Completada', 300.00),
+(10, 10, 10, DATEADD(DAY, -35, GETDATE()), 'Completada', 350.00),
+(11, 1, 1, DATEADD(DAY, -42, GETDATE()), 'Completada', 150.00),
+(12, 2, 2, DATEADD(DAY, -49, GETDATE()), 'Completada', 200.00),
+(13, 3, 3, DATEADD(DAY, -56 ,GETDATE()), 'Completada', 250.00),
+(14 ,4 ,4 ,DATEADD(DAY,-63 ,GETDATE()) , 'Completada' ,300.00),
+(15 ,5 ,5 ,DATEADD(DAY,-70 ,GETDATE()) , 'Completada' ,350.00);
+
+-- Insertar 10 habitaciones ocupadas y disponibles
+-- Nota: 0 para disponible y 1 para ocupado
+INSERT INTO Agendas.Habitaciones (Numero, Tipo, Disponibilidad) VALUES
+('101', 'Individual', 0),
+('102', 'Doble', 1),
+('103', 'Suite', 0),
+('104', 'Individual', 1),
+('105', 'Doble', 0),
+('106', 'Suite', 1),
+('107', 'Individual', 0),
+('108', 'Doble', 1),
+('109', 'Suite', 0),
+('110', 'Individual', 1);
+
+-- Insertar 10 tratamientos activos y finalizados
+INSERT INTO Visitas.Tratamientos (PacienteID, Descripcion, FechaInicio, FechaFin) VALUES
+(1, 'Tratamiento para hipertensión', DATEADD(DAY, -30, GETDATE()), NULL),
+(2, 'Tratamiento para diabetes', DATEADD(DAY, -60, GETDATE()), DATEADD(DAY, -15, GETDATE())),
+(3, 'Tratamiento para asma', DATEADD(DAY, -45, GETDATE()), NULL),
+(4, 'Tratamiento para alergias', DATEADD(DAY, -20, GETDATE()), DATEADD(DAY, -5, GETDATE())),
+(5, 'Tratamiento para artritis', DATEADD(DAY, -90, GETDATE()), NULL),
+(6, 'Tratamiento para depresión', DATEADD(DAY, -120, GETDATE()), DATEADD(DAY, -30, GETDATE())),
+(7, 'Tratamiento para migrañas', DATEADD(DAY, -15, GETDATE()), NULL),
+(8, 'Tratamiento para insomnio', DATEADD(DAY, -10, GETDATE()), DATEADD(DAY, 10, GETDATE())),
+(9, 'Tratamiento para ansiedad', DATEADD(DAY, -25, GETDATE()), NULL),
+(10, 'Tratamiento para obesidad', DATEADD(DAY, -60, GETDATE()), DATEADD(DAY, 30, GETDATE()));
+
+-- Insertar 20 medicamentos
+INSERT INTO Visitas.Medicamentos (TratamientoID, Nombre, Dosis) VALUES
+(1, 'Lisinopril', '10 mg'),
+(2, 'Metformina', '500 mg'),
+(3, 'Albuterol', '2 inhalaciones'),
+(4, 'Cetirizina', '10 mg'),
+(5, 'Ibuprofeno', '400 mg'),
+(6, 'Sertralina', '50 mg'),
+(7, 'Sumatriptán', '100 mg'),
+(8, 'Zolpidem', '10 mg'),
+(9, 'Lorazepam', '1 mg'),
+(10, 'Orlistat', '120 mg'),
+(1, 'Amlodipino', '5 mg'),
+(2, 'Glipizida', '5 mg'),
+(3, 'Fluticasona', '2 inhalaciones'),
+(4, 'Loratadina', '10 mg'),
+(5, 'Naproxeno', '500 mg'),
+(6, 'Fluoxetina', '20 mg'),
+(7, 'Rizatriptán', '10 mg'),
+(8, 'Eszopiclona', '3 mg'),
+(9, 'Diazepam', '5 mg'),
+(10, 'Sibutramina', '15 mg');
