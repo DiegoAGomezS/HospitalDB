@@ -176,3 +176,95 @@ ALTER COLUMN CostoConsulta FLOAT;
 ALTER TABLE Agendas.Habitaciones
 ADD Disponibilidad BIT;
 
+-- 6. Eliminación de objetos (DROP):
+
+/* Eliminación de objetos solicitados (DROP):
+
+Eliminar una tabla temporal.
+Eliminar una restricción CHECK.
+Eliminar una restricción UNIQUE.
+Eliminar una columna.
+Eliminar una tabla de pruebas.
+Crear y eliminar una tabla Auditoria.
+Crear y eliminar una tabla Logs.
+Eliminar una FOREIGN KEY.
+Eliminar una tabla MedicamentosPrueba.
+Eliminar una base de datos de pruebas.
+
+*/
+
+-- Creación y eliminación de la tabla Auditoria 
+-- (Se guardara en el esquema agendas para tener coherencia)
+
+CREATE TABLE Agendas.Auditoria (
+    AuditoriaID INT PRIMARY KEY IDENTITY(1,1),
+    Accion NVARCHAR(50),
+    Usuario NVARCHAR(100),
+    Fecha DATETIME DEFAULT GETDATE()
+);
+
+DROP TABLE Agendas.Auditoria;
+
+-- Eliminar una restricción CHECK y una restricción UNIQUE
+ALTER TABLE Personal.Medicos
+DROP CONSTRAINT CK_Medicos_Salario;
+
+ALTER TABLE Personal.Medicos
+DROP CONSTRAINT UQ_Medicos_Correo;
+
+-- Eliminar una columna (Experiencia en Médicos)
+ALTER TABLE Personal.Medicos
+DROP COLUMN Experiencia;
+
+-- Eliminar una tabla de pruebas y crear y eliminar una tablas Log y una tabla Auditoria.
+CREATE TABLE Personal.MedicamentosPrueba (
+    MedicamentoID INT PRIMARY KEY IDENTITY(1,1),
+    Nombre NVARCHAR(100),
+    Dosis NVARCHAR(50)
+);
+
+DROP TABLE Personal.MedicamentosPrueba;
+
+CREATE TABLE Agendas.Logs (
+    LogID INT PRIMARY KEY IDENTITY(1,1),
+    Evento NVARCHAR(255),
+    Usuario NVARCHAR(100),
+    Fecha DATETIME DEFAULT GETDATE()
+);
+
+DROP TABLE Agendas.Logs;
+
+Create table Personal.Auditoria (
+    AuditoriaID INT PRIMARY KEY IDENTITY(1,1),
+    Accion NVARCHAR(50),
+    Usuario NVARCHAR(100),
+    Fecha DATETIME DEFAULT GETDATE()
+);
+
+DROP TABLE Personal.Auditoria;
+
+-- Eliminar una FOREIGN KEY (FK entre Citas y Médicos)
+ALTER TABLE Agendas.Citas
+DROP CONSTRAINT FK_Citas_Medicos;
+
+-- Eliminar una base de datos de pruebas
+USE master;
+GO
+
+Create database HospitalDB_Pruebas;
+
+Use Master;
+Go
+
+IF EXISTS (SELECT name FROM sys.databases WHERE name = N'HospitalDB_Pruebas')
+BEGIN
+    ALTER DATABASE HospitalDB_Pruebas SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE HospitalDB_Pruebas;
+END
+GO
+
+-- Regresamos a la base de datos HospitalDB para seguir trabajando en ella.
+use HospitalDB;
+GO
+
+
