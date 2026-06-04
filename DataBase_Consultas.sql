@@ -196,9 +196,18 @@ Eliminar una base de datos de pruebas.
 
 */
 
+-- Creación y eliminación de la tabla temporal
+CREATE TABLE #PacientesTemporales (
+    TemporalID INT PRIMARY KEY IDENTITY(1,1),
+    Nombre NVARCHAR(100),
+    FechaAcceso DATETIME DEFAULT GETDATE()
+);
+
+DROP TABLE #PacientesTemporales;
+
+
 -- Creación y eliminación de la tabla Auditoria 
 -- (Se guardara en el esquema agendas para tener coherencia)
-
 CREATE TABLE Agendas.Auditoria (
     AuditoriaID INT PRIMARY KEY IDENTITY(1,1),
     Accion NVARCHAR(50),
