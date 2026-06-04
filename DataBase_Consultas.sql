@@ -69,6 +69,7 @@ CREATE TABLE Personal.Medicos (
     Correo NVARCHAR(255) UNIQUE,
     Salario DECIMAL(18, 2) CHECK (Salario > 0),
     FechaRegistro DATETIME DEFAULT GETDATE(),
+    ColumnaEliminable NVARCHAR(255),
     FOREIGN KEY (EspecialidadID) REFERENCES Personal.Especialidades(EspecialidadID)
 );
 
@@ -212,9 +213,10 @@ DROP CONSTRAINT CK_Medicos_Salario;
 ALTER TABLE Personal.Medicos
 DROP CONSTRAINT UQ_Medicos_Correo;
 
--- Eliminar una columna (Experiencia en Médicos)
+-- Eliminar una columna no necesaria
 ALTER TABLE Personal.Medicos
-DROP COLUMN Experiencia;
+DROP COLUMN ColumnaEliminable;
+
 
 -- Eliminar una tabla de pruebas y crear y eliminar una tablas Log y una tabla Auditoria.
 CREATE TABLE Personal.MedicamentosPrueba (
@@ -298,17 +300,27 @@ INSERT INTO Personal.Especialidades (Nombre) VALUES
 ('Gastroenterología');
 
 -- Insertar 10 médicos y especialistas
-INSERT INTO Personal.Medicos (Nombre, EspecialidadID, Correo, Salario, Turno) VALUES
-('Dr. Juan Pérez', 1, 'JP@Hospital.com', 50000, 'Mañana'),
-('Dra. Ana Gómez', 2, 'AG@Hospital.com', 55000, 'Tarde'),
-('Dr. Carlos Ruiz', 3, 'CR@Hospital.com', 48000, 'Noche'),
-('Dra. Laura Martínez', 4, 'LM@Hospital.com', 53000, 'Mañana'),
-('Dr. Pedro Sánchez', 5, 'PD@Hospital.com', 52000, 'Tarde'),
-('Dra. María López', 1, 'ML@Hospital.com', 51000, 'Noche'),
-('Dr. Luis Fernández', 2, 'LF@Hospital.com', 54000, 'Mañana'),
-('Dra. Sofía Ramírez', 3, 'SR@Hospital.com', 49000, 'Tarde'),
-('Dr. Andrés Torres', 4, 'AT@Hospital.com', 53000, 'Noche'),
-('Dra. Ruiz Sandoval', 5, 'RS@Hospital.com', 50000, 'Mañana');
+INSERT INTO Personal.Medicos (Nombre, EspecialidadID, Correo, Salario, Experiencia, Turno) VALUES
+('Carlos Gómez', 1, 'CG@gmail.com', 4500.00, 5, 'Matutino'),
+('María Rodríguez', 2, 'MR@gmail.com', 5200.00, 8, 'Vespertino'),
+('Luis Fernández', 3, 'LF@gmail.com', 6000.00, 12, 'Nocturno'),
+('Ana Martínez', 1, 'AM@gmail.com', 4800.00, 6, 'Matutino'),
+('Pedro Sánchez', 4, 'PS@gmail.com', 5500.00, 9, 'Vespertino'),
+('Sofía Ramírez', 5, 'SR@gmail.com', 4100.00, 3, 'Matutino'),
+('Andrés Torres', 2, 'AT@gmail.com', 6800.00, 15, 'Nocturno'),
+('Laura López', 3, 'LL@gmail.com', 5000.00, 7, 'Vespertino'),
+('Diego Ramírez', 4, 'DR@gmail.com', 4300.00, 4, 'Matutino'),
+('Marta Fernández', 5, 'MF@gmail.com', 5900.00, 11, 'Nocturno'),
+('Jorge Sánchez', 1, 'JS@gmail.com', 7200.00, 20, 'Matutino'),
+('Lucía Martínez', 2, 'LM@gmail.com', 4700.00, 5, 'Vespertino'),
+('Elena Castro', 3, 'EC@gmail.com', 5300.00, 8, 'Matutino'),
+('Ricardo Herrera', 4, 'RH@gmail.com', 6100.00, 13, 'Nocturno'),
+('Claudia Vargas', 5, 'CV@gmail.com', 4200.00, 3, 'Vespertino'),
+('Gabriel Mendoza', 1, 'GM@gmail.com', 5600.00, 10, 'Matutino'),
+('Beatriz Ortiz', 2, 'BO@gmail.com', 7000.00, 18, 'Nocturno'),
+('Alejandro Silva', 3, 'AS@gmail.com', 4900.00, 6, 'Vespertino'),
+('Patricia Delgado', 4, 'PD@gmail.com', 4400.00, 4, 'Matutino'),
+('Fernando Ríos', 5, 'FR@gmail.com', 7500.00, 22, 'Nocturno');
 
 -- Insertar 20 pacientes con todos los campos (Nombre, Correo, Edad, Teléfono, Dirección, Género, Tipo de Sangre, Fecha de Nacimiento)
 INSERT INTO Visitas.Pacientes (Nombre, Correo, Edad, Telefono, Direccion, Genero, TipoSangre, FechaNacimiento) VALUES
@@ -400,3 +412,85 @@ INSERT INTO Visitas.Medicamentos (TratamientoID, Nombre, Dosis) VALUES
 (8, 'Eszopiclona', '3 mg'),
 (9, 'Diazepam', '5 mg'),
 (10, 'Sibutramina', '15 mg');
+
+-- 8. Actualización de datos (UPDATE):
+
+/* Actualizaciones solicitadas: 
+
+Actualizar teléfono de un paciente.
+Actualizar dirección de un paciente.
+Actualizar salario de un médico.
+Actualizar turno de un médico.
+Cambiar estado de una cita.
+Actualizar costo de consulta.
+Actualizar nombre de especialidad.
+Actualizar disponibilidad de habitación.
+Actualizar tratamiento activo.
+Actualizar medicamento.
+Actualizar correo de paciente.
+Actualizar correo de médico.
+Actualizar fecha de cita.
+Actualizar experiencia del médico.
+Actualizar tipo de sangre.
+
+*/
+
+-- Actualizar teléfono y dirección de un paciente
+UPDATE Visitas.Pacientes
+SET Telefono = '555-9999', Direccion = 'Calle Nueva 123'
+WHERE PacienteID = 1;
+
+-- Actualizar salario y turno de un médico
+UPDATE Personal.Medicos
+SET Salario = 60000, Turno = 'Tarde'
+WHERE MedicoID = 1;
+
+-- Cambiar estado y costo de una cita
+UPDATE Agendas.Citas
+SET Estado = 'Completada', CostoConsulta = 180.00
+WHERE CitaID = 1;
+
+-- Actualizar nombre de especialidad
+UPDATE Personal.Especialidades
+SET Nombre = 'Cardiología Avanzada'
+WHERE EspecialidadID = 1;
+
+-- Actualizar disponibilidad de una habitación
+UPDATE Agendas.Habitaciones
+SET Disponibilidad = 1
+WHERE HabitacionID = 2;
+
+-- Actualizar tratamiento activo
+UPDATE Visitas.Tratamientos
+SET FechaFin = GETDATE()
+WHERE TratamientoID = 1;
+
+-- Actualizar medicamento
+UPDATE Visitas.Medicamentos
+SET Dosis = '20 mg'
+WHERE MedicamentoID = 1;
+
+-- Actualizar correo de un paciente
+UPDATE Visitas.Pacientes
+SET Correo = 'CG14@gmail.com'
+WHERE PacienteID = 1;
+
+-- Actualizar correo de un médico
+UPDATE Personal.Medicos
+SET Correo = 'JP34@Hospital.com'
+WHERE MedicoID = 1;
+
+-- Actualizar fecha de una cita
+UPDATE Agendas.Citas
+SET FechaCita = DATEADD(DAY, 3, GETDATE())
+WHERE CitaID = 1;
+
+-- Actualizar experiencia de un médico
+UPDATE Personal.Medicos
+SET Experiencia = 10
+WHERE MedicoID = 1;
+
+-- Actualizar tipo de sangre de un paciente
+UPDATE Visitas.Pacientes
+SET TipoSangre = 'A+'
+WHERE PacienteID = 1;
