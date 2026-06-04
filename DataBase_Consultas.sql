@@ -604,3 +604,10 @@ WHERE CAST(FechaCita AS DATE) = CAST(GETDATE() AS DATE);
 SELECT * FROM Agendas.Habitaciones
 WHERE Disponibilidad = 0;
 
+-- Mostrar cantidad de pacientes registrados
+SELECT COUNT(*) AS CantidadPacientes FROM Visitas.Pacientes;
+
+-- Mostrar cantidad de citas por médico
+SELECT MedicoID, COUNT(*) AS CantidadCitas
+FROM Agendas.Citas
+GROUP BY MedicoID;
